@@ -1,8 +1,11 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
-import products from './data/products.js'
+
+// Product route
+import productRoutes from './routes/productRoutes.js'
 
 //initializing dotenv configurations it will make accessing constants from .env file to be called using process.env.[variabble name in .env file]
 dotenv.config()
@@ -17,24 +20,22 @@ app.get('/', (req, res) => {
   res.send('API is running...')
 })
 
-// Get all products
-app.get('/api/products', (req, res) => {
-  // res.json() or res.send()
-  // auto converts JS object to JSON
-  res.json(products)
-})
+// redirect or mount any call to this path to productRotes methods
+app.use('/api/products', productRoutes)
 
-// Get product by id
-app.get('/api/products/:id', (req, res) => {
-  const product = products.find((p) => p._id === req.params.id)
-  res.json(product)
-})
+// fallback for 404 i.e. anything that is not found
+app.use(notFound)
 
-const port = process.env.PORT || 5000
+// this code below is acting as a middlware and middleware is nothing but just a piece of code or fuction having access to req-res cycle and custom code as per our need
+
+// here we are creating a custome error middleware and to oevrride existing one we use error first in our code
+app.use(errorHandler)
+
+const PORT = process.env.PORT || 5000
 // make app to listen on given port number and second argument is for callback method
 app.listen(
-  port,
+  PORT,
   console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
 )
