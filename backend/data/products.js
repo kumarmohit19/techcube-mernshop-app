@@ -80,7 +80,7 @@ const products = [
 ]
 
 // es modules way to export methods and objects
-// export default products
+export default products
 
 //  but backend is not setu for es modules, so will use common JS
-module.exports = products
+// module.exports = products
