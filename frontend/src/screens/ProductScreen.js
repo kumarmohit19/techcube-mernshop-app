@@ -1,22 +1,33 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProductDetails } from '../actions/productActions'
 import { Link } from 'react-router-dom'
-import { Row, Col, Image, ListGroup, Card } from 'react-bootstrap'
+import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ history, match }) => {
+  const [qty, setQty] = useState(0)
+
+  // dispatch is used to call actions via components
   const dispatch = useDispatch()
 
+  // selector is used to fetch states from reducers
   const productDetails = useSelector((state) => state.productDetails)
 
+  // destructuring state
   const { loading, error, product } = productDetails
 
+  // useEffect hook is to make certain function run on the component load
   useEffect(() => {
     dispatch(listProductDetails(match.params.id))
   }, [dispatch, match.params.id])
+
+  const addToCartHandler = () => {
+    //history object is related to react router na dused to redirect to pages
+    history.push(`/cart/${match.params.id}?qty=${qty}`)
+  }
 
   return (
     <>
@@ -58,6 +69,26 @@ const ProductScreen = ({ match }) => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {product.countInStock > 0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Oty</Col>
+                      <Col>
+                        <Form.Control
+                          as='select'
+                          value={qty}
+                          onChange={(e) => setQty(e.target.value)}
+                        >
+                          {[...Array(product.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 <ListGroup.Item>
                   <Row>
                     <Col>Status:</Col>
@@ -69,13 +100,15 @@ const ProductScreen = ({ match }) => {
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <button
-                    className='btn btn-lg btn-primary'
+                  <Button
+                    onClick={addToCartHandler}
+                    className='btn-lg'
+                    style={{ width: '100%' }}
                     type='button'
                     disabled={product.countInStock === 0}
                   >
                     Add To Cart
-                  </button>
+                  </Button>
                 </ListGroup.Item>
               </ListGroup>
             </Card>
