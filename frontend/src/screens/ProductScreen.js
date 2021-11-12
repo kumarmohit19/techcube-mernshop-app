@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { listProductDetails } from '../actions/productActions'
+
 import { Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
+import { listProductDetails } from '../actions/productActions'
+import { addToCart } from '../actions/cartActions'
+
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(0)
+  const [qty, setQty] = useState(1)
 
   // dispatch is used to call actions via components
   const dispatch = useDispatch()
@@ -26,7 +29,8 @@ const ProductScreen = ({ history, match }) => {
 
   const addToCartHandler = () => {
     //history object is related to react router na dused to redirect to pages
-    history.push(`/cart/${match.params.id}?qty=${qty}`)
+    dispatch(addToCart(product._id, qty))
+    history.push('/cart')
   }
 
   return (

@@ -2,6 +2,24 @@ main {
   min-height: 80vh;
 }
 
+h1,
+h2,
+h3 {
+  text-transform: uppercase;
+}
+
+h1 {
+  letter-spacing: 2px;
+  font-size: 1.8rem;
+  padding: 1rem 0;
+}
+
+h2 {
+  letter-spacing: 1px;
+  font-size: 1.4rem;
+  padding: 0.5rem 0;
+}
+
 h3 {
   padding: 1rem 0;
 }
