@@ -6,6 +6,7 @@ import connectDB from './config/db.js'
 
 // Product route
 import productRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 //initializing dotenv configurations it will make accessing constants from .env file to be called using process.env.[variabble name in .env file]
 dotenv.config()
@@ -15,13 +16,19 @@ connectDB()
 //initialiazing express
 const app = express()
 
+// this piece of middleware is to make routes accessible for data in body
+app.use(express.json())
+
 // make express accept response of default page and send back a respond
 app.get('/', (req, res) => {
   res.send('API is running...')
 })
 
-// redirect or mount any call to this path to productRotes methods
+// redirect or mount any call to this path to productRoutes methods
 app.use('/api/products', productRoutes)
+
+// redirect or mount any call to this path to userRoutes methods
+app.use('/api/users', userRoutes)
 
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)
