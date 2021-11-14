@@ -7,6 +7,7 @@ import connectDB from './config/db.js'
 // Product route
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
 
 //initializing dotenv configurations it will make accessing constants from .env file to be called using process.env.[variabble name in .env file]
 dotenv.config()
@@ -29,6 +30,9 @@ app.use('/api/products', productRoutes)
 
 // redirect or mount any call to this path to userRoutes methods
 app.use('/api/users', userRoutes)
+
+// redirect or mount any call to this path to orderRoutes methods
+app.use('/api/order', orderRoutes)
 
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)
