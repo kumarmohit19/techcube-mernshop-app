@@ -32,7 +32,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 
 // redirect or mount any call to this path to orderRoutes methods
-app.use('/api/order', orderRoutes)
+app.use('/api/orders', orderRoutes)
 
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)

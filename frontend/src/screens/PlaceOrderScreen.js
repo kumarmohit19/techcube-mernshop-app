@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckOutSteps from '../components/CheckOutSteps'
 
-import { saveShippingAddress } from '../actions/cartActions'
-import ShippingScreen from './ShippingScreen'
+import { createOrder } from '../actions/orderActions'
 
-const PlaceOrderScreen = () => {
-  // const  dispatch = useDispatch()
+const PlaceOrderScreen = ({ history }) => {
+  const dispatch = useDispatch()
 
   const cart = useSelector((state) => state.cart)
 
@@ -33,8 +32,29 @@ const PlaceOrderScreen = () => {
     Number(cart.taxPrice)
   ).toFixed(2)
 
+  const orderCreate = useSelector((state) => state.orderCreate)
+  const { order, success, error, loading } = orderCreate
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`)
+    }
+    // eslint-disable-next-line
+  }, [history, success])
   const placeOrderHandler = (e) => {
     e.preventDefault()
+
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        taxPrice: cart.taxPrice,
+        shippingPrice: cart.shippingPrice,
+        totalPrice: cart.totalPrice,
+      })
+    )
   }
   return (
     <>
@@ -118,17 +138,20 @@ const PlaceOrderScreen = () => {
                   <Col>$ {cart.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              <ListGroup.Item>
+                {error && <Message variant='danger'>{error}</Message>}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button
+                  type='button'
+                  style={{ width: '100%' }}
+                  disabled={cart.cartItems.length === 0}
+                  onClick={placeOrderHandler}
+                >
+                  Place Order
+                </Button>
+              </ListGroup.Item>
             </ListGroup>
-            <ListGroup.Item>
-              <Button
-                type='button'
-                style={{ width: '100%' }}
-                disabled={cart.cartItems.length === 0}
-                onClick={placeOrderHandler}
-              >
-                Place Order
-              </Button>
-            </ListGroup.Item>
           </Card>
         </Col>
       </Row>
