@@ -34,6 +34,11 @@ app.use('/api/users', userRoutes)
 // redirect or mount any call to this path to orderRoutes methods
 app.use('/api/orders', orderRoutes)
 
+// paypal api route created and client id send as response
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
+
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)
 
