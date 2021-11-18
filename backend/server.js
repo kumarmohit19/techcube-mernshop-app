@@ -1,3 +1,4 @@
+import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
@@ -8,6 +9,7 @@ import connectDB from './config/db.js'
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 
 //initializing dotenv configurations it will make accessing constants from .env file to be called using process.env.[variabble name in .env file]
 dotenv.config()
@@ -34,10 +36,19 @@ app.use('/api/users', userRoutes)
 // redirect or mount any call to this path to orderRoutes methods
 app.use('/api/orders', orderRoutes)
 
+// redirect or mount any call to this path to uploadRoutes methods
+app.use('/api/upload', uploadRoutes)
+
 // paypal api route created and client id send as response
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 )
+
+// to make uploads folder static
+// __dirname refers to current directory but not when using ES Module, only whne using common js (require syntax)
+// so....
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)
