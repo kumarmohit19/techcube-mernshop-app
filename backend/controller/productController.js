@@ -5,7 +5,15 @@ import asyncHandler from 'express-async-handler' //to handle error in our expres
 // @route   GET/api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({})
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i', //case insensitive
+        },
+      }
+    : {}
+  const products = await Product.find({ ...keyword })
   // res.json() or res.send()
   // auto converts JS object to JSON
   res.json(products)
