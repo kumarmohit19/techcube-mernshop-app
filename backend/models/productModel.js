@@ -14,6 +14,11 @@ const reviewSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId, // links to a mongoDB schema id
+      required: true,
+      ref: 'User', // reference to the model
+    },
   },
   {
     timestamps: true,
