@@ -52,7 +52,7 @@ const ProductScreen = ({ history, match }) => {
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
     }
     dispatch(listProductDetails(match.params.id))
-  }, [dispatch, match.params.id, successProductReview])
+  }, [dispatch, match.params.id, successProductReview, productId, product._id])
 
   const addToCartHandler = () => {
     //history object is related to react router na dused to redirect to pages
