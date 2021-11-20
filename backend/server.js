@@ -28,9 +28,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json())
 
 // make express accept response of default page and send back a respond
-app.get('/', (req, res) => {
-  res.send('API is running...')
-})
 
 // redirect or mount any call to this path to productRoutes methods
 app.use('/api/products', productRoutes)
@@ -54,6 +51,18 @@ app.get('/api/config/paypal', (req, res) =>
 // so....
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...')
+  })
+}
 
 // fallback for 404 i.e. anything that is not found
 app.use(notFound)
